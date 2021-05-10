@@ -1,9 +1,11 @@
-class Task_Fields{
-  final String taskName;
-  final DateTime taskDate;
-  final String taskCategories;
+class TaskFields {
+  TaskFields(
+      {this.taskName,
+      this.taskDate,
+      this.aboutTask,
+      this.priority,
+      this.taskCategories});
+  final String taskName, aboutTask, taskCategories;
   final int priority;
-  final String aboutTask;
-
-  Task_Fields({this.taskName , this.taskDate , this.aboutTask , this.taskCategories , this.priority});
+  final DateTime taskDate;
 }

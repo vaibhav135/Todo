@@ -2,25 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/task_fields.dart';
 
-class Task_List extends StatefulWidget {
-  var tasks;
-  Task_List({this.tasks});
+class TaskList extends StatefulWidget {
+  final tasks;
+  TaskList({this.tasks});
   dynamic someMethod() {
-    print("printing from task_list $tasks");
+    print("printing from TaskList $tasks");
   }
 
   @override
-  _Task_ListState createState() => _Task_ListState(this.tasks);
+  _TaskListState createState() => _TaskListState(this.tasks);
 }
 
-class _Task_ListState extends State<Task_List> {
-  List<Task_Fields> task_fields = <Task_Fields>[];
+class _TaskListState extends State<TaskList> {
+  List<TaskFields> taskFields = <TaskFields>[];
   var _v;
-  _Task_ListState(this._v);
+  
+  _TaskListState(this._v);
   void addList() {
     setState(() {
-      task_fields.add(_v);
-      print("printing from task_listState $_v");
+      taskFields.add(_v);
+      print("printing from TaskListState $_v");
     });
   }
 
@@ -30,9 +31,9 @@ class _Task_ListState extends State<Task_List> {
     // TODO: implement build
     return ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: task_fields.length,
+        itemCount: taskFields.length,
         itemBuilder: (context, index) {
-          var item = task_fields[index];
+          var item = taskFields[index];
           return Stack(
             children: [
               Card(
