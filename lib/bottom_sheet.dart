@@ -5,6 +5,7 @@ import 'package:todo/task_fields.dart';
 //import 'package:todo/write_data.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class BottomSheet extends StatefulWidget {
   BottomSheet({this.addtask});
@@ -18,6 +19,12 @@ class _BottomSheetState extends State<BottomSheet> {
   // Set default `_initialized` and `_error` state to false
   bool _initialized = false;
   bool _error = false;
+
+  //adding current time and Date
+  String formattedDate =
+      DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+  //DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+  //String string = dateFormat.format(DateTime.now());
 
   // Define an async function to initialize FlutterFire
   void initializeFlutterFire() async {
@@ -166,7 +173,7 @@ class _BottomSheetState extends State<BottomSheet> {
                         SizedBox(
                           height: 20,
                         ),
-                        new RaisedButton(
+                        new ElevatedButton(
                           //Task_Field(taskName: myController.text ,taskDate:myDateController.value , aboutTask:myAboutController , priority:myPriorityController.value , taskCategories:myCategoryController)
                           onPressed: () {
                             var task = TaskFields(
@@ -174,7 +181,8 @@ class _BottomSheetState extends State<BottomSheet> {
                                 taskDate: DateTime.parse(myDateController.text),
                                 aboutTask: myAboutController.text,
                                 priority: int.parse(myPriorityController.text),
-                                taskCategories: myCategoryController.text);
+                                taskCategories: myCategoryController.text,
+                                currentDateTime: formattedDate);
                             createData(task, users);
                             widget.addtask(task);
                             Navigator.pop(context);
@@ -184,12 +192,15 @@ class _BottomSheetState extends State<BottomSheet> {
                             myCategoryController.clear();
                             myAboutController.clear();
                           },
-                          textColor: Colors.white,
-                          elevation: 20,
                           child: Text("add task"),
-                          color: Colors.blue,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
+                          style: ElevatedButton.styleFrom(
+                            textStyle: new TextStyle(
+                                color: Color.fromRGBO(255, 255, 255, 1)),
+                            elevation: 20,
+                            primary: Colors.blue,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                          ),
                         ),
                       ],
                     ),
@@ -212,6 +223,7 @@ class _BottomSheetState extends State<BottomSheet> {
       "aboutTask": task.aboutTask,
       "priority": task.priority,
       "taskCategories": task.taskCategories,
+      "currentDateTime": task.currentDateTime,
     };
     addingTaskData(users);
   }

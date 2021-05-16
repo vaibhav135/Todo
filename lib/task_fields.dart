@@ -4,8 +4,9 @@ class TaskFields {
       this.taskDate,
       this.aboutTask,
       this.priority,
-      this.taskCategories});
-  final String taskName, aboutTask, taskCategories;
+      this.taskCategories,
+      this.currentDateTime});
+  final String taskName, aboutTask, taskCategories, currentDateTime;
   final int priority;
   final DateTime taskDate;
 }

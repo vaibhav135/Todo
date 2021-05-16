@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo/bottom_sheet.dart' as sheet;
 import 'package:todo/task_fields.dart';
 import 'package:todo/data_check.dart';
-//import 'package:todo/write_data.dart';
+import 'package:todo/navigation_drawer.dart';
 
 void main() {
   runApp(MyApp());
@@ -66,13 +66,24 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: NavigationDrawer(),
+      ),
       appBar: AppBar(
         title: Text(widget.title),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
       ),
       body: new TabBarView(
         controller: _controller,
         children: <Widget>[
+          //calling DataCheck() class here so the the data will be read from the firestore,
           DataCheck(),
+
           ListView.builder(
               key: new PageStorageKey('building'),
               scrollDirection: Axis.vertical,

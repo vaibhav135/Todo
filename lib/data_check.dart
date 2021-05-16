@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'package:todo/record.dart';
+import 'package:todo/task_page.dart';
+
+enum TaskState { selected, notSelected }
+
 class DataCheck extends StatefulWidget {
   const DataCheck({Key key}) : super(key: key);
   //final BuildContext contxt;
@@ -10,6 +15,7 @@ class DataCheck extends StatefulWidget {
 }
 
 class _DataCheckState extends State<DataCheck> {
+  TaskState tstate = TaskState.notSelected;
   // Set default `_initialized` and `_error` state to false
   bool _initialized = false;
   bool _error = false;
@@ -45,7 +51,7 @@ class _DataCheckState extends State<DataCheck> {
       );
     }
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('baby').snapshots(),
+      stream: FirebaseFirestore.instance.collection('tasks').snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
 
@@ -71,8 +77,9 @@ class _DataCheckState extends State<DataCheck> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Record.fromSnapshot(data);
 
+    //print(record.reference.id);
     return Padding(
-      key: ValueKey(record.name),
+      key: ValueKey(record.taskName),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Container(
         decoration: BoxDecoration(
@@ -80,29 +87,26 @@ class _DataCheckState extends State<DataCheck> {
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: ListTile(
-          title: Text(record.name),
-          trailing: Text(record.votes.toString()),
-          onTap: () => print(record),
+          title: Text(record.taskName),
+          leading: Radio<TaskState>(
+            value: TaskState.selected,
+            groupValue: tstate,
+            onChanged: (TaskState value) {
+              setState(() {
+                tstate = value;
+                // TODO: if the state is selected then the task will be moved to completed
+                if (tstate == TaskState.selected) print(tstate);
+              });
+            },
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TaskPage(record)),
+            );
+          },
         ),
       ),
     );
   }
-}
-
-class Record {
-  final String name;
-  final int votes;
-  final DocumentReference reference;
-
-  Record.fromMap(Map<String, dynamic> map, {this.reference})
-      : assert(map['name'] != null),
-        assert(map['votes'] != null),
-        name = map['name'],
-        votes = map['votes'];
-
-  Record.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
-
-  @override
-  String toString() => "Record<$name:$votes>";
 }
